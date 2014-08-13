@@ -25,6 +25,7 @@ Public Class Prac04
 
         saveFileDialog.ShowDialog()
 
+
         writer = New StreamWriter(saveFileDialog.FileName, False)
 
         Dim item As ListViewItem
@@ -32,8 +33,7 @@ Public Class Prac04
         For Each item In lstView.Items
             writer.WriteLine(item.SubItems(0).Text + "," + item.SubItems(1).Text + "," + item.SubItems(2).Text)
         Next item
-
-        writer.Close()
+        
 
     End Sub
 
@@ -42,26 +42,34 @@ Public Class Prac04
         openFileDialog.ShowDialog()
 
         Dim reader As New StreamReader(openFileDialog.FileName, False)
-        Dim lstViewText(3) As String
 
-        Dim line As String
-        Dim pos As Integer
-        Do
-            line = reader.ReadLine()
-            If line Is Nothing Then Exit Do
+        Try
+            Dim lstViewText(3) As String
 
-            pos = 0
-            For Each item In line.Split(",")
-                lstViewText(pos) = item
-                pos += 1
-            Next
+            Dim line As String
+            Dim pos As Integer
 
-            lstView.Items.Add(New ListViewItem(lstViewText))
-        Loop
+            Do
+                line = reader.ReadLine()
+                If line Is Nothing Then Exit Do
 
-        For Each item In lstView.Items
-            listViewItems.Add(item)
-        Next item
+                pos = 0
+                For Each item In line.Split(",")
+                    lstViewText(pos) = item
+                    pos += 1
+                Next
+
+                lstView.Items.Add(New ListViewItem(lstViewText))
+            Loop
+
+            For Each item In lstView.Items
+                listViewItems.Add(item)
+            Next item
+        Catch ex As IOException
+            MsgBox(ex.ToString)
+        Finally
+            reader.Close()
+        End Try
 
     End Sub
 
